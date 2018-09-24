@@ -2,7 +2,7 @@ var _ = require('lodash');
 var expect = require('chai').expect;
 var marshal = require('..');
 
-describe('it should marshal simple types', function() {
+describe('Simple type marshaling', function() {
 	[
 		{name: 'arrays (flat)', value: ()=> _.times(100, ()=> _.random(10000, 99999))},
 		{name: 'arrays (nested)', value: ()=> _.times(100, ()=> _.random(1000, 9999)).map(i => _.times(10, ()=> _.random(10000, 99999)))},

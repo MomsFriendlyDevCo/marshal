@@ -5,7 +5,7 @@ var marshal = module.exports = {
 		stringify: true,
 		destringify: true,
 		clone: false,
-		depth: 2,
+		depth: 0,
 		modules: [
 			'date',
 			'function',
