@@ -40,13 +40,17 @@ describe('Complex combined types', done => {
 
 	it('should marshal various types', ()=> {
 		var sampleObject = {
+			arrays: [[1, 2, 3], [], [[[]]], [-10, 'Hello', Infinity]],
 			booleans: [true, false],
 			dates: [new Date(), new Date(Date.now() + _.random(100000, 999999)), new Date(Date.now() - _.random(100000, 999999))],
+			// Functions never compare directly in Mocha for some reason
+			//functions: [()=> false, arg => console.log(arg), (a, b, c) => a + b / c],
 			nullables: [null, undefined],
-			numbers: [NaN, Infinity, -Infinity, -5, 928, 312312.312312],
-			regex: [/./, /^start/, /end$/],
-			string: ['', 'a', 'Hello World', '😈🙓😿'],
+			numbers: [0, 123, NaN, Infinity, -Infinity, -5, 928, 312312.312312],
+			objects: [{foo: 1, bar: 2, baz: {bazFoo: 3}}, {}, {subKey: [1, 2, {}]}],
+			regex: [/./, /^start/, /end$/, /global/g, /multi-global/mg],
 			sets: [new Set([1, 2, 3, 10]), new Set()],
+			strings: ['', 'a', 'Hello World', '😈🙓😿'],
 		};
 
 		var serialized = marshal.serialize(sampleObject, {clone: true});
