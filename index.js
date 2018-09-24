@@ -1,15 +1,18 @@
 var _ = require('lodash');
-var traverse = require('traverse');
 
 var marshal = module.exports = {
 	settings: {
-		asJSON: true,
+		stringify: true,
+		destringify: true,
+		clone: false,
+		depth: 2,
 		modules: [
 			'date',
 			'function',
 			'infinity',
 			'nan',
 			'regexp',
+			'set',
 			'undefined',
 		],
 	},
@@ -47,14 +50,25 @@ var marshal = module.exports = {
 		var settings = _.defaults(options, marshal.settings);
 		var modules = marshal.loadModules(settings.modules);
 
-		var wrapped = traverse(data).map(function(node) {
+		var tree = settings.clone ? _.cloneDeep(data) : data;
+
+		var traverse = (node, path) => {
 			var encoder = modules.find(m => m.test(node));
 			if (encoder) {
-				this.update(encoder.serialize(node), true);
+				var result = encoder.serialize(node);
+				if (path.length) {
+					_.set(tree, path, result);
+				} else {
+					tree = result;
+				}
+			} else if ((!settings.depth || path.length < settings.depth) && _.isObject(node)) {
+				_.keys(node).forEach(k => traverse(node[k], path.concat(k)));
 			}
-		});
+		};
 
-		return settings.asJSON ? JSON.stringify(wrapped): wrapped;
+		traverse(tree, []);
+
+		return settings.stringify ? JSON.stringify(tree): tree;
 	},
 
 	deserialize: function(data, options) {
@@ -62,12 +76,25 @@ var marshal = module.exports = {
 		var modules = marshal.loadModules(settings.modules);
 		var modulesByID = _.mapKeys(modules, 'id');
 
-		var parsed = JSON.parse(data);
+		var tree = settings.destringify ? JSON.parse(data)
+			: settings.clone ? _.cloneDeep(data)
+			: data;
 
-		return traverse(parsed).map(function(node) {
+		var traverse = (node, path) => {
 			if (_.isObject(node) && node._ && node._.startsWith('~') && modulesByID[node._]) {
-				this.update(modulesByID[node._].deserialize(node), true);
+				var result = modulesByID[node._].deserialize(node);
+				if (path.length) {
+					_.set(tree, path, result);
+				} else {
+					tree = result;
+				}
+			} else if ((!settings.depth || path.length < settings.depth) && _.isObject(node)) {
+				_.keys(node).forEach(k => traverse(node[k], path.concat(k)));
 			}
-		})
+		};
+
+		traverse(tree, []);
+
+		return tree;
 	},
 };
