@@ -15,6 +15,7 @@ var marshal = module.exports = {
 			'set',
 			'undefined',
 		],
+		circular: true,
 	},
 
 	loadedModules: {},
@@ -52,7 +53,18 @@ var marshal = module.exports = {
 
 		var tree = settings.clone ? _.cloneDeep(data) : data;
 
+		var seen = [];
+
 		var traverse = (node, path) => {
+			if (settings.circular) {
+				var foundExisting = seen.find(s => s[0] === node);
+				if (foundExisting) {
+					return _.set(tree, path, {_: '~circular', p: foundExisting[1]});
+				} else {
+					seen.push([node, path]);
+				}
+			}
+
 			var encoder = modules.find(m => m.test(node));
 			if (encoder) {
 				var result = encoder.serialize(node);
@@ -88,6 +100,8 @@ var marshal = module.exports = {
 				} else {
 					tree = result;
 				}
+			} else if (settings.circular && _.isObject(node) && node._ && node._ == '~circular') {
+				_.set(tree, path, _.get(tree, node.p));
 			} else if ((!settings.depth || path.length < settings.depth) && _.isObject(node)) {
 				_.keys(node).forEach(k => traverse(node[k], path.concat(k)));
 			}

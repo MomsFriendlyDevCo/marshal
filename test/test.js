@@ -88,4 +88,31 @@ describe('Complex combined types', done => {
 		var deserialized = marshal.deserialize(serialized);
 		expect(deserialized).to.deep.equal(sampleObject);
 	});
+
+	it('should marshal circular data types #1', ()=> {
+		var foo = {title: 'foo', child: undefined};
+		var bar = {title: 'baz', child: foo};
+		foo.child = bar;
+
+		var sampleObject = {root: foo};
+
+		var serialized = marshal.serialize(sampleObject, {clone: true});
+		expect(serialized).to.be.a('string');
+
+		var deserialized = marshal.deserialize(serialized);
+		expect(deserialized).to.deep.equal(sampleObject);
+	});
+
+	it('should marshal circular data types #2', ()=> {
+		var items = _.times(10, x => ({title: x}));
+		items.forEach(item => item.children = _.sampleSize(items, items.length));
+
+		var sampleObject = {items: [{children: items}]};
+
+		var serialized = marshal.serialize(sampleObject, {clone: true});
+		expect(serialized).to.be.a('string');
+
+		var deserialized = marshal.deserialize(serialized);
+		expect(deserialized).to.deep.equal(sampleObject);
+	});
 });

@@ -1,7 +1,7 @@
 {
   "name": "@momsfriendlydevco/marshal",
-  "version": "1.0.0",
-  "description": "Marshaling serializer for modern JavaScript primitives",
+  "version": "1.0.1",
+  "description": "Marshaling serializer for modern JavaScript primitives + circular objects",
   "main": "index.js",
   "scripts": {
     "test": "mocha"

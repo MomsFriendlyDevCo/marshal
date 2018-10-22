@@ -5,6 +5,7 @@ A simple marshaling serializer for modern JavaScript primitives.
 **Features**:
 
 * Will attempt to serialize all known JS primitive types (dates, NaN, sets, undefined etc.)
+* Can serialize / deserialize circular structures
 * Simple serialize / deserialize usage
 * Extremely fast - uses its own traversal system rather than a 3rd party NPM library
 * Low dependency count - only Lodash is needed
@@ -42,11 +43,12 @@ The objects to use when operating.
 
 | Option        | Type      | Default                  | Description                                                                                                            |
 |---------------|-----------|--------------------------|------------------------------------------------------------------------------------------------------------------------|
-| `clone`       | `Boolean` | `False`                  | Clone the input to the serialize / deserialize functions before operating. Adds overhead but will not mutate the input |
+| `clone`       | `Boolean` | `false`                  | Clone the input to the serialize / deserialize functions before operating. Adds overhead but will not mutate the input |
+| `circular`    | `Boolean` | `true`                   | Detect and manage circular references, if you know the input / output object cannot be circular there is a speed bonus to disabling this |
 | `depth`       | `Number`  | `0`                      | The maximum depth to traverse into when operating. If zero this is infinite                                            |
 | `modules`     | `Array`   | [All modules](./modules) | Which modules to use when operating (see notes below)                                                                  |
-| `stringify`   | `Boolean` | `True`                   | Whether to transform the mutated object in `marshal.serialize()` into a string                                         |
-| `destringify` | `Boolean` | `True`                   | Assume that input to `marshal.deserialize()` is a string which needs transforming first                                |
+| `stringify`   | `Boolean` | `true`                   | Whether to transform the mutated object in `marshal.serialize()` into a string                                         |
+| `destringify` | `Boolean` | `true`                   | Assume that input to `marshal.deserialize()` is a string which needs transforming first                                |
 
 
 **NOTES:**
