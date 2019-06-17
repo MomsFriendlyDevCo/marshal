@@ -45,6 +45,7 @@ The objects to use when operating.
 |---------------|-----------|--------------------------|------------------------------------------------------------------------------------------------------------------------|
 | `clone`       | `Boolean` | `false`                  | Clone the input to the serialize / deserialize functions before operating. Adds overhead but will not mutate the input |
 | `circular`    | `Boolean` | `true`                   | Detect and manage circular references, if you know the input / output object cannot be circular there is a speed bonus to disabling this |
+| `symetric`    | `Boolean` | `false`                  | Encode objects symetrically - i.e. reorder keys so that they can be consistantly hashed                                |
 | `depth`       | `Number`  | `0`                      | The maximum depth to traverse into when operating. If zero this is infinite                                            |
 | `modules`     | `Array`   | [All modules](./modules) | Which modules to use when operating (see notes below)                                                                  |
 | `stringify`   | `Boolean` | `true`                   | Whether to transform the mutated object in `marshal.serialize()` into a string                                         |

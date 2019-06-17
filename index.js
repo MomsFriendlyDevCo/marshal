@@ -1,4 +1,5 @@
 var _ = require('lodash');
+_.mixin(require('lodash-keyarrange'));
 
 var marshal = module.exports = {
 	settings: {
@@ -16,6 +17,7 @@ var marshal = module.exports = {
 			'undefined',
 		],
 		circular: true,
+		symetric: false,
 	},
 
 	loadedModules: {},
@@ -51,7 +53,10 @@ var marshal = module.exports = {
 		var settings = _.defaults(options, marshal.settings);
 		var modules = marshal.loadModules(settings.modules);
 
-		var tree = settings.clone ? _.cloneDeep(data) : data;
+		var tree =
+			settings.symetric ? _.keyArrangeDeep(data)
+			: settings.clone ? _.cloneDeep(data)
+			: data;
 
 		var seen = [];
 
@@ -74,7 +79,9 @@ var marshal = module.exports = {
 					tree = result;
 				}
 			} else if ((!settings.depth || path.length < settings.depth) && _.isObject(node)) {
-				_.keys(node).forEach(k => traverse(node[k], path.concat(k)));
+				var keys = _.keys(node);
+				if (settings.symetric) keys.sort();
+				keys.forEach(k => traverse(node[k], path.concat(k)));
 			}
 		};
 

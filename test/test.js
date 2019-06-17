@@ -116,3 +116,12 @@ describe('Complex combined types', done => {
 		expect(deserialized).to.deep.equal(sampleObject);
 	});
 });
+
+describe('Symetrical encoding', ()=> {
+
+	it('should marshal objects symetrically', ()=> {
+		expect(marshal.serialize({one: 1, two: 2})).to.not.equal(marshal.serialize({two: 2, one: 1}));
+		expect(marshal.serialize({one: 1, two: 2}, {symetric: true})).to.equal(marshal.serialize({two: 2, one: 1}, {symetric: true}));
+	});
+
+});
