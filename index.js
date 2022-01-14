@@ -42,7 +42,7 @@ var marshal = module.exports = {
 				return marshal.loadedModules[loadedModule.id] = loadedModule;
 			} else if (_.isObject(module)) { // Assume its a compatible module
 				if (!module.id) throw new Error('Provided custom module does not expose an `id` property');
-				return marhsal.loadedModules[module.id] = module;
+				return marshal.loadedModules[module.id] = module;
 			} else {
 				throw new Error('Unknown module type');
 			}
