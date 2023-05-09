@@ -118,4 +118,26 @@ var marshal = module.exports = {
 
 		return tree;
 	},
+
+	sizeOf: data => {
+		var size = 0;
+		var traverse = node => {
+			if (_.isObject(node)) {
+				var keys = _.keys(node);
+				size += keys.join(':,').length;
+				_.keys(node).forEach(k => traverse(node[k]));
+			}
+			if (_.isObject(node)) {
+				var result = modulesByID[node._].deserialize(node);
+				if (path.length) {
+					_.set(tree, path, result);
+				} else {
+					tree = result;
+				}
+			} else if (settings.circular && _.isObject(node) && node._ && node._ == '~circular') {
+				_.set(tree, path, _.get(tree, node.p));
+			} else if ((!settings.depth || path.length < settings.depth) && _.isObject(node)) {
+			}
+		};
+	},
 };
