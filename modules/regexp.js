@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	id: '~regexp',
 	test: v => v instanceof RegExp,
 	serialize: v => ({_: '~regexp', v: v.source, f: v.flags}),

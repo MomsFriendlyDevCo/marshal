@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	id: '~nan',
 	test: v => Number.isNaN(v),
 	serialize: v => ({_: '~nan'}),

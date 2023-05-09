@@ -1,11 +1,11 @@
-var _ = require('lodash');
-var expect = require('chai').expect;
-var marshal = require('..');
+import _ from 'lodash';
+import {expect} from 'chai';
+import marshal from '../index.js';
 
 describe('Simple type marshaling', function() {
 	[
 		{name: 'arrays (flat)', value: ()=> _.times(100, ()=> _.random(10000, 99999))},
-		{name: 'arrays (nested)', value: ()=> _.times(100, ()=> _.random(1000, 9999)).map(i => _.times(10, ()=> _.random(10000, 99999)))},
+		{name: 'arrays (nested)', value: ()=> _.times(100, ()=> _.random(1000, 9999)).map(()=> _.times(10, ()=> _.random(10000, 99999)))},
 		{name: 'boolean (false)', value: ()=> false},
 		{name: 'boolean (true)', value: ()=> true},
 		{name: 'dates', value: ()=> new Date(Date.now() + (Math.random() * 10000))},
@@ -36,7 +36,7 @@ describe('Simple type marshaling', function() {
 	});
 });
 
-describe('Complex combined types', done => {
+describe('Complex combined types', ()=> {
 
 	it('should marshal various types', ()=> {
 		var sampleObject = {

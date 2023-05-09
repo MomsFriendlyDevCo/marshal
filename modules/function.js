@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	id: '~function',
 	test: v => typeof v == 'function',
 	serialize: v => ({_: '~function', v: v.toString()}),

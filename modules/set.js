@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	id: '~set',
 	test: v => v instanceof Set,
 	serialize: v => ({_: '~set', v: Array.from(v)}),

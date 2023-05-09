@@ -2,9 +2,20 @@
   "name": "@momsfriendlydevco/marshal",
   "version": "1.1.1",
   "description": "Marshaling serializer for modern JavaScript primitives + circular objects",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
+    "lint": "eslint index.js modules test",
     "test": "mocha"
+  },
+  "imports": {
+    "#modules/*": "./modules/*.js"
+  },
+  "exports": {
+    ".": "./index.js"
+  },
+  "engineStrict": true,
+  "engines": {
+    "node": ">=16.14.0"
   },
   "repository": {
     "type": "git",
@@ -25,10 +36,23 @@
   "homepage": "https://github.com/MomsFriendlyDevCo/marshal#readme",
   "devDependencies": {
     "chai": "^4.3.7",
+    "eslint": "^8.28.0",
     "mocha": "^10.2.0"
   },
   "dependencies": {
     "lodash": "^4.17.21",
     "lodash-keyarrange": "^1.1.1"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "env": {
+      "es6": true,
+      "node": true,
+      "mocha": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 13,
+      "sourceType": "module"
+    }
   }
 }

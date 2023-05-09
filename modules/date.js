@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	id: '~date',
 	test: v => v instanceof Date,
 	serialize: v => ({_: '~date', v: v.toISOString()}),

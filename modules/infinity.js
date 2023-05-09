@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	id: '~infinity',
 	test: v => v === Infinity || v === -Infinity,
 	serialize: v => ({_: '~infinity', v: v === Infinity ? 1 : 0}),
