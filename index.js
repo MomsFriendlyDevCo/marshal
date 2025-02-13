@@ -57,27 +57,35 @@ let marshal = {
 			: settings.clone ? _.cloneDeep(data)
 			: data;
 
-		let seen = [];
+		let seen = new Map();
 
 		let traverse = (node, path) => {
-			if (settings.circular) {
-				let foundExisting = seen.find(s => s[0] === node);
+			let isObject = _.isObject(node);
+			if (isObject && settings.circular) {
+				let foundExisting = seen.get(node);
 				if (foundExisting) {
-					return _.set(tree, path, {_: '~circular', p: foundExisting[1]});
+					return _.set(tree, path, {_: '~circular', p: foundExisting.join('.')});
 				} else {
-					seen.push([node, path]);
+					seen.set(node, path);
 				}
 			}
 
 			let encoder = modules.find(m => m.test(node));
+			let isDeep = (!settings.depth || path.length < settings.depth) && isObject;
+
 			if (encoder) {
 				let result = encoder.serialize(node);
-				if (path.length) {
+				if (encoder.recursive && isDeep) {
+					let keys = _.keys(node);
+					if (settings.symetric) keys.sort();
+					_.set(tree, path, result);
+					keys.forEach(k => traverse(node[k], path.concat(k)));
+				} else if (path.length) {
 					_.set(tree, path, result);
 				} else {
 					tree = result;
 				}
-			} else if ((!settings.depth || path.length < settings.depth) && _.isObject(node)) {
+			} else if (isDeep) {
 				let keys = _.keys(node);
 				if (settings.symetric) keys.sort();
 				keys.forEach(k => traverse(node[k], path.concat(k)));
@@ -102,7 +110,14 @@ let marshal = {
 			if (_.isObject(node) && node._ && node._.startsWith('~') && modulesByID[node._]) {
 				let result = modulesByID[node._].deserialize(node);
 				if (path.length) {
-					_.set(tree, path, result);
+					if (modulesByID[node._].recursive && _.isObject(result)) { // If we got back an object should we recurse into it?
+						_.set(tree, path, result);
+						_.keys(result).forEach(k =>
+							traverse(node[k], [...path, k])
+						);
+					} else { // Simple object return (or we're not recursing)
+						_.set(tree, path, result);
+					}
 				} else {
 					tree = result;
 				}

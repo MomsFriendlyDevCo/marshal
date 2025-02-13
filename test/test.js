@@ -36,6 +36,65 @@ describe('Simple type marshaling', function() {
 	});
 });
 
+describe('Custom modules', ()=> {
+
+	it('should support overriding array output', ()=> {
+		var sampleObject = {
+			foo: [1, 2, 3],
+			bar: [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+			baz: {flarp: [{florp: [4, 5, 6]}]},
+		};
+
+		let modArrayFlatten = { // Custom Array -> Object converter
+			id: `~array`,
+			recursive: true,
+			test: v => Array.isArray(v),
+			serialize: v => ({_: '~array', ...v}),
+			deserialize: v => Object.entries(v)
+				.filter(([k]) => k !== '_')
+				.map(([, v]) => v),
+		};
+
+		var serialized = marshal.serialize(sampleObject, {
+			clone: true,
+			modules: [
+				...marshal.settings.modules, // Normal converters
+				modArrayFlatten,
+			],
+			stringify: false,
+		});
+		expect(serialized).to.be.an('object');
+
+		expect(serialized).to.deep.equal({
+			foo: {_: '~array', 0: 1, 1: 2, 2: 3},
+			bar: {
+				_: '~array',
+				0: {_: '~array', 0: 1, 1: 1, 2: 1},
+				1: {_: '~array', 0: 2, 1: 2, 2: 2},
+				2: {_: '~array', 0: 3, 1: 3, 2: 3},
+			},
+			baz: {
+				flarp: {
+					_: '~array',
+					0: {
+						florp: {_: '~array', 0: 4, 1: 5, 2: 6},
+					},
+				},
+			},
+		});
+
+		var deserialized = marshal.deserialize(serialized, {
+			modules: [
+				...marshal.settings.modules, // Normal converters
+				modArrayFlatten,
+			],
+			destringify: false,
+		});
+		expect(deserialized).to.deep.equal(sampleObject, 'convert back to source');
+	});
+
+});
+
 describe('Complex combined types', ()=> {
 
 	it('should marshal various types', ()=> {
