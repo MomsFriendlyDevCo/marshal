@@ -114,7 +114,7 @@ let marshal = {
 			: data;
 
 		let traverse = (node, path) => {
-			if (_isObject(node) && node._ && node._.startsWith('~') && modulesByID[node._]) {
+			if (_isObject(node) && node._ && typeof node._ == 'string' && node._.startsWith('~') && modulesByID[node._]) {
 				let result = modulesByID[node._].deserialize(node);
 				if (path.length) {
 					if (modulesByID[node._].recursive && _isObject(result)) { // If we got back an object should we recurse into it?
