@@ -1,23 +1,23 @@
-import _ from 'lodash';
+import {times, random, sampleSize} from 'lodash-es';
 import {expect} from 'chai';
 import marshal from '../index.js';
 
 describe('Simple type marshaling', function() {
 	[
-		{name: 'arrays (flat)', value: ()=> _.times(100, ()=> _.random(10000, 99999))},
-		{name: 'arrays (nested)', value: ()=> _.times(100, ()=> _.random(1000, 9999)).map(()=> _.times(10, ()=> _.random(10000, 99999)))},
+		{name: 'arrays (flat)', value: ()=> times(100, ()=> (10000, 99999))},
+		{name: 'arrays (nested)', value: ()=> times(100, ()=> (1000, 9999)).map(()=> times(10, ()=> (10000, 99999)))},
 		{name: 'boolean (false)', value: ()=> false},
 		{name: 'boolean (true)', value: ()=> true},
 		{name: 'dates', value: ()=> new Date(Date.now() + (Math.random() * 10000))},
 		{name: 'function', value: ()=> ({func: ()=> console.log('Hello World')}), test: (a, b) => a.toString() == b.toString()},
 		{name: 'infinity', value: ()=> Infinity},
 		{name: '-infinity', value: ()=> -Infinity},
-		{name: 'numbers', value: ()=> _.random(10000, 99999)},
-		{name: 'numbers (negative)', value: ()=> 0 - _.random(10000, 99999)},
-		{name: 'objects (key/val)', value: ()=> ({foo: _.random(10000, 99999), bar: _.random(10000, 99999), baz: _.random(10000, 99999)})},
+		{name: 'numbers', value: ()=> (10000, 99999)},
+		{name: 'numbers (negative)', value: ()=> 0 - (10000, 99999)},
+		{name: 'objects (key/val)', value: ()=> ({foo: (10000, 99999), bar: (10000, 99999), baz: (10000, 99999)})},
 		{name: 'regex', value: ()=> /something.*/},
 		{name: 'sets', value: ()=> new Set([1, 2, 3])},
-		{name: 'strings', value: ()=> 'Hello World-'  + _.random(10000, 99999)},
+		{name: 'strings', value: ()=> 'Hello World-'  + (10000, 99999)},
 	].forEach(t => {
 
 		it(t.name, ()=> {
@@ -101,7 +101,7 @@ describe('Complex combined types', ()=> {
 		var sampleObject = {
 			arrays: [[1, 2, 3], [], [[[]]], [-10, 'Hello', Infinity]],
 			booleans: [true, false],
-			dates: [new Date(), new Date(Date.now() + _.random(100000, 999999)), new Date(Date.now() - _.random(100000, 999999))],
+			dates: [new Date(), new Date(Date.now() + (100000, 999999)), new Date(Date.now() - (100000, 999999))],
 			// Functions never compare directly in Mocha for some reason
 			//functions: [()=> false, arg => console.log(arg), (a, b, c) => a + b / c],
 			nullables: [null, undefined],
@@ -123,14 +123,14 @@ describe('Complex combined types', ()=> {
 		var sampleObject = {
 			foo: 'Foo',
 			bar: {
-				barFoo: _.random(10000, 99999),
-				barBar: 'String-' + _.random(10000, 99999),
-				barBaz: _.random(1) ? true : false,
+				barFoo: (10000, 99999),
+				barBar: 'String-' + (10000, 99999),
+				barBaz: (1) ? true : false,
 			},
 			baz: {
 				bazFoo: {
 					bazFooFoo: 'hello',
-					bazFooBar: _.times(100, ()=> _.random(10000, 99999)),
+					bazFooBar: times(100, ()=> (10000, 99999)),
 					bazFooBaz: {
 						bazFooBazFoo: {
 							bazFooBazFooFoo: 123,
@@ -163,8 +163,8 @@ describe('Complex combined types', ()=> {
 	});
 
 	it('should marshal circular data types #2', ()=> {
-		var items = _.times(10, x => ({title: x}));
-		items.forEach(item => item.children = _.sampleSize(items, items.length));
+		var items = times(10, x => ({title: x}));
+		items.forEach(item => item.children = sampleSize(items, items.length));
 
 		var sampleObject = {items: [{children: items}]};
 

@@ -35,13 +35,13 @@
   },
   "homepage": "https://github.com/MomsFriendlyDevCo/marshal#readme",
   "devDependencies": {
-    "chai": "^5.1.2",
+    "chai": "^5.2.0",
     "eslint": "^9.20.1",
     "mocha": "^11.1.0"
   },
   "dependencies": {
     "lodash-es": "^4.17.21",
-    "lodash-keyarrange": "^1.1.1"
+    "lodash-keyarrange": "^2.0.0"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
