@@ -9,13 +9,13 @@ import {
 } from 'lodash-es';
 import {keyArrangeDeep} from 'lodash-keyarrange';
 
-import modDate from '#modules/date';
-import modFunction from '#modules/function';
-import modInfinity from '#modules/infinity';
-import modNan from '#modules/nan';
-import modRegExp from '#modules/regexp';
-import modSet from '#modules/set';
-import modUndefined from '#modules/undefined';
+import modDate from './modules/date.js';
+import modFunction from './modules/function.js';
+import modInfinity from './modules/infinity.js';
+import modNan from './modules/nan.js';
+import modRegExp from './modules/regexp.js';
+import modSet from './modules/set.js';
+import modUndefined from './modules/undefined.js';
 
 let marshal = {
 	settings: {

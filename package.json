@@ -7,9 +7,6 @@
     "lint": "eslint index.js modules test",
     "test": "mocha"
   },
-  "imports": {
-    "#modules/*": "./modules/*.js"
-  },
   "exports": {
     ".": "./index.js"
   },
