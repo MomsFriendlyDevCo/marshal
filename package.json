@@ -1,6 +1,6 @@
 {
   "name": "@momsfriendlydevco/marshal",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "Marshaling serializer for modern JavaScript primitives + circular objects",
   "type": "module",
   "scripts": {
