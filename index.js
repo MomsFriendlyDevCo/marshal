@@ -77,11 +77,11 @@ let marshal = {
 				}
 			}
 
-			let encoder = modules.find(m => m.test(node));
+			let encoder = modules.find(m => m.test(node, path));
 			let isDeep = (!settings.depth || path.length < settings.depth) && isObject;
 
 			if (encoder) {
-				let result = encoder.serialize(node);
+				let result = encoder.serialize(node, path);
 				if (encoder.recursive && isDeep) {
 					let keys = _keys(node);
 					if (settings.symetric) keys.sort();
@@ -115,7 +115,7 @@ let marshal = {
 
 		let traverse = (node, path) => {
 			if (_isObject(node) && node._ && typeof node._ == 'string' && node._.startsWith('~') && modulesByID[node._]) {
-				let result = modulesByID[node._].deserialize(node);
+				let result = modulesByID[node._].deserialize(node, path);
 				if (path.length) {
 					if (modulesByID[node._].recursive && _isObject(result)) { // If we got back an object should we recurse into it?
 						_set(tree, path, result);

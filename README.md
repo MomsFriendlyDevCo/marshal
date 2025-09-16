@@ -56,3 +56,4 @@ The objects to use when operating.
 
 * Modules can be specified as simple strings (e.g. 'date') which assumes they are built in modules [provided with the NPM](./modules), if this is a path that path is automatically included. If this is an object it is assumed to be an already compatible module
 * All modules must expose a `id`, `test`, `serialize` and `deserialize` properties
+* All module functions are called as `(v:Any, path:Array<String>)`
